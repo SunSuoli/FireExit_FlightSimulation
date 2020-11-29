@@ -40,8 +40,6 @@ namespace FireExit_FlightSimulation
             }
             EXCEL.Open_Create_WorkBook(filepath);
             EXCEL.Open_WorkSheet(0);
-            Console.WriteLine( EXCEL.Read_WorkSheet().Count);
-            Console.WriteLine(EXCEL.Read_WorkSheet()[0].Count);
         }
     }
 }
