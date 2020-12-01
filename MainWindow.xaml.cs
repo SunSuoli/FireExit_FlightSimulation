@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using static FireExit_FlightSimulation.BinDing;
@@ -12,10 +11,9 @@ namespace FireExit_FlightSimulation
     public partial class MainWindow : Window
     {
         
-        Source Data_S_source = new Source();
-        Source Data_R_source = new Source();
+        static Source Data_S_source = new Source();
+        static Source Data_R_source = new Source();
         string filepath;
-        Excel_NPIO EXCEL=new Excel_NPIO();
         public MainWindow()
         {
             InitializeComponent();
@@ -38,8 +36,14 @@ namespace FireExit_FlightSimulation
             {
                 filepath = fileDialog.FileName;
             }
-            EXCEL.Open_Create_WorkBook(filepath);
-            EXCEL.Open_WorkSheet(0);
+            ExcelHelper EXCEL = new ExcelHelper();
+            EXCEL.File_OpenorCreate(filepath);
+            EXCEL.WorkSheet_Choose(1);
+            EXCEL.Cloum_Add(2);
+            EXCEL.Cloum_Delete(4);
+            EXCEL.File_SaveAs(filepath);
+            EXCEL.File_Close();
         }
     }
+
 }
