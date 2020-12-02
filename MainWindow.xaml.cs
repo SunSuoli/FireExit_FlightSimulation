@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using static FireExit_FlightSimulation.BinDing;
@@ -39,8 +40,7 @@ namespace FireExit_FlightSimulation
             ExcelHelper EXCEL = new ExcelHelper();
             EXCEL.File_OpenorCreate(filepath);
             EXCEL.WorkSheet_Choose(1);
-            EXCEL.Cloum_Add(2);
-            EXCEL.Cloum_Delete(4);
+            EXCEL.Cell_SetColumnWidth(0, 50);
             EXCEL.File_SaveAs(filepath);
             EXCEL.File_Close();
         }
