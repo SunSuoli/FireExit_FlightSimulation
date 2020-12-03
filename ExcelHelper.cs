@@ -1,5 +1,6 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using System;
+using System.Drawing;
 using System.Reflection;
 
 namespace FireExit_FlightSimulation
@@ -11,6 +12,7 @@ namespace FireExit_FlightSimulation
         private _Workbook workbook ;//定义工作簿
         private Sheets sheets;//定义所有的表
         private _Worksheet worksheet;//定义要操作的表
+        private Range range;//定义单元格区域
         public void File_OpenorCreate(String FilePath)
         {
             app = new Application();
@@ -53,46 +55,65 @@ namespace FireExit_FlightSimulation
         {
             ((Range)worksheet.Columns[index,Missing.Value ]).Insert(Missing.Value, XlInsertShiftDirection.xlShiftToRight);
         }
-        public void Cell_SetValue(int row,int colunm, object value)//设置改单元格值
+        public void Range_Select(int row_min, int colunm_min, int row_max, int colunm_max)
         {
-            worksheet.Cells[row, colunm]= value;
+            range = (Range)worksheet.Range[worksheet.Cells[row_min, colunm_min], worksheet.Cells[row_max, colunm_max]];
         }
-        public void Cell_SetFormula(int row, int colunm, string formula)//设置单元格计算公式
+        //单元格设置
+        public void Range_SetFormula(string formula)//设置单元格计算公式
         {
-            worksheet.Cells[row, colunm] = formula;
+            range.Value2 = formula;
         }
-        public void Cell_Merge(int row_min, int colunm_min, int row_max, int colunm_max, object value)//合并单元格
+        public void Range_Merge()//合并单元格
         {
-            worksheet.Cells[row_min, colunm_min] = value;//先将值复制给左上单元格
             //屏蔽系统弹出的询问窗口
             app.DisplayAlerts = false;
             app.AlertBeforeOverwriting = false;
-            ((Range)worksheet.Range[worksheet.Cells[row_min, colunm_min], worksheet.Cells[row_max, colunm_max]]).Merge();//将一个区域合并
+            range.Merge();//将一个区域合并
         }
-        public void Cell_SetRowHeight(int row, object value)//设置单元格行高
+        public void Range_SetRowHeight(double value)//设置单元格行高
         {
-            try
-            {
-                ((Range)worksheet.Rows[row]).RowHeight = value;
-            }
-            catch//如果row超范围，则将所有的行高都调整为目标高度
-            {
-                ((Range)worksheet.Columns[1]).RowHeight = value;
-            }
-            
+            range.RowHeight = value;
         }
-        public void Cell_SetColumnWidth(int colunm, object value)//设置单元格行高
+        public void Range_SetColumnWidth(double value)//设置单元格行高
         {
-            try
-            {
-                ((Range)worksheet.Columns[colunm]).ColumnWidth = value;
-            }
-            catch//如果colunm超范围，则将所有的列宽都调整为目标宽度
-            {
-                ((Range)worksheet.Rows[1]).ColumnWidth = value;
-            }
-            
+            range.ColumnWidth = value;
         }
+        public void Range_SetColor(object color)//设置单元格背景颜色,颜色共有56中
+        {
+           range.Interior.ColorIndex = color;
+        }
+        public void Range_SetFont_Color(Color color)//设置单元格字体颜色
+        {
+            range.Font.Color = ColorTranslator.ToOle(color);
+        }
+        public void Range_SetFont_Size(int size)//设置单元格字体大小
+        {
+            range.Font.Size = size;
+        }
+        public void Range_SetFont_Blod(bool bold)//设置单元格字体粗体
+        {
+            range.Font.Bold = bold;
+        }
+        public void Range_SetFont_Name(string  name)//设置单元格字体名称
+        {
+            range.Font.Name = name;
+        }
+        //单元格写入
+        public void Range_SetValue(string[,] value)//合并单元格
+        {
+          range.Value2=value;//设置一个区域的值
+        }
+        //单元格读取
+        public string[,] Range_GetValue()//合并单元格
+        {
+            string[,] data;
+            data= range.Value2;//获取一个区域的值
+            
+            return data;
+        }
+
+        //文件保存
         public void File_SaveAs(String FilePath)//另存文件
         {
             //屏蔽系统弹出的询问窗口
