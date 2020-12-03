@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using static FireExit_FlightSimulation.BinDing;
@@ -25,7 +26,6 @@ namespace FireExit_FlightSimulation
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            object[,] table;
             OpenFileDialog fileDialog = new OpenFileDialog();
             //SaveFileDialog fileDialog = new SaveFileDialog();
             //FolderBrowserDialog fileDialog = new FolderBrowserDialog();
@@ -40,9 +40,9 @@ namespace FireExit_FlightSimulation
             ExcelHelper EXCEL = new ExcelHelper();
             EXCEL.File_OpenorCreate(filepath);
             EXCEL.WorkSheet_Choose(1);
-            EXCEL.Range_Select(1, 1,3,4);
-            Console.WriteLine(EXCEL.Range_GetValue());
-             
+            EXCEL.Range_Select(1, 1,10,10);
+            string[,]  object_arry =EXCEL.Range_GetValue();
+            Console.WriteLine(object_arry[0,0]);
             EXCEL.File_SaveAs(filepath);
             EXCEL.File_Close();
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 
@@ -99,17 +100,23 @@ namespace FireExit_FlightSimulation
         {
             range.Font.Name = name;
         }
+
         //单元格写入
-        public void Range_SetValue(string[,] value)//合并单元格
+        public void Range_SetValue(object[,] value)//设置一个区域值
         {
           range.Value2=value;//设置一个区域的值
         }
         //单元格读取
         public string[,] Range_GetValue()//合并单元格
         {
-            string[,] data;
-            data= range.Value2;//获取一个区域的值
-            
+            string[,] data = new string[range.Rows.Count, range.Columns.Count];
+            for(int i=0;i<range.Rows.Count; i++)
+            {
+                for (int j = 0; j < range.Columns.Count; j++)
+                {
+                    data[i, j] =(string) range.Value2[i+1, j+1];//EXCEL的索引从1开始
+                }
+            }
             return data;
         }
 
