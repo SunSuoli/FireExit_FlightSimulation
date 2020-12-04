@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using static FireExit_FlightSimulation.BinDing;
@@ -16,12 +17,18 @@ namespace FireExit_FlightSimulation
         static Source Data_S_source = new Source();
         static Source Data_R_source = new Source();
         string filepath;
+
+       UDPHelper UDP_CONNECT=new UDPHelper();
         public MainWindow()
         {
             InitializeComponent();
 
             Bind(Data_S_source, Data_S, TextBox.TextProperty, "String");
             Bind(Data_R_source, Data_R, TextBlock.TextProperty, "String");
+
+            ThreadStart childref = new ThreadStart(UDP_Receview);
+            Thread childThread = new Thread(childref);
+            childThread.Start();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -45,6 +52,32 @@ namespace FireExit_FlightSimulation
             Console.WriteLine(object_arry[0,0]);
             EXCEL.File_SaveAs(filepath);
             EXCEL.File_Close();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            UDP_CONNECT.UDP_Open("192.168.1.247", 51901);
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            UDP_CONNECT.UDP_Write(Data_S_source.Data_String, "255.255.255.255", 51900);
+        }
+
+        private void UDP_Receview()
+        {
+            string data;
+            string ip;
+            int port;
+            while (true)
+            {
+               UDP_CONNECT.UDP_Read( out data,out ip,out port);
+                if (data != "")
+                {
+                    Data_R_source.Data_String += ip +":" +port.ToString() + "：" + data+"\n";
+                }
+                Thread.Sleep(100);
+            }
         }
     }
 
