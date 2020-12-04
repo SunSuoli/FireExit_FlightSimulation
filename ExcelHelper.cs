@@ -56,9 +56,26 @@ namespace FireExit_FlightSimulation
         {
             ((Range)worksheet.Columns[index,Missing.Value ]).Insert(Missing.Value, XlInsertShiftDirection.xlShiftToRight);
         }
-        public void Range_Select(int row_min, int colunm_min, int row_max, int colunm_max)
+        public void Range_Select(int row_min=-1, int colunm_min=-1, int row_max=-1, int colunm_max=-1)
         {
-            range = (Range)worksheet.Range[worksheet.Cells[row_min, colunm_min], worksheet.Cells[row_max, colunm_max]];
+            if(row_min == -1)//如果行的起始值是-1，则认为从第一行开始
+            {
+                row_min = 0;
+            }
+            if (colunm_min == -1)//如果列的起始值是-1.则认为从第一列开始
+            {
+                colunm_min = 0;
+            }
+            if (row_max == -1)//如果行的结束值是-1，则认为到最后一行结束
+            {
+                row_max = worksheet.Rows.Count-1;
+            }
+            if (colunm_max == -1)//如果列的结束值是-1，则认为到最后一列结束
+            {
+                colunm_max = worksheet.Columns.Count-1;
+            }
+
+            range = (Range)worksheet.Range[worksheet.Cells[row_min+1, colunm_min+1], worksheet.Cells[row_max+1, colunm_max+1]];
         }
         //单元格设置
         public void Range_SetFormula(string formula)//设置单元格计算公式
@@ -114,7 +131,14 @@ namespace FireExit_FlightSimulation
             {
                 for (int j = 0; j < range.Columns.Count; j++)
                 {
-                    data[i, j] =(string) range.Value2[i+1, j+1];//EXCEL的索引从1开始
+                    if(range.Value2[i + 1, j + 1] = null)
+                    {
+                        data[i, j] = "";
+                    }
+                    else
+                    {
+                        data[i, j] = (string)range.Value2[i + 1, j + 1];//EXCEL的索引从1开始
+                    }
                 }
             }
             return data;
@@ -134,8 +158,8 @@ namespace FireExit_FlightSimulation
             workbook.Close();
             workbooks.Close();
             app.Quit();
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
-            app = null;
+            //System.Runtime.InteropServices.Marshal.ReleaseComObject(app);
+            //app = null;
         }
     }
 }
