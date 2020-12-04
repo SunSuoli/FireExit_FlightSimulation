@@ -40,7 +40,7 @@ namespace FireExit_FlightSimulation
             ExcelHelper EXCEL = new ExcelHelper();
             EXCEL.File_OpenorCreate(filepath);
             EXCEL.WorkSheet_Choose(1);
-            EXCEL.Range_Select(-1, 2,5,10);
+            EXCEL.Range_Select(-1, 2,5,-1);
             string[,]  object_arry =EXCEL.Range_GetValue();
             Console.WriteLine(object_arry[0,0]);
             EXCEL.File_SaveAs(filepath);

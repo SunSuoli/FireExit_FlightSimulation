@@ -66,13 +66,13 @@ namespace FireExit_FlightSimulation
             {
                 colunm_min = 0;
             }
-            if (row_max == -1)//如果行的结束值是-1，则认为到最后一行结束
+            if (row_max == -1)//如果行的结束值是-1，则认为到已使用的最后一行结束
             {
-                row_max = worksheet.Rows.Count-1;
+                row_max = worksheet.UsedRange.Rows.Count-1;
             }
-            if (colunm_max == -1)//如果列的结束值是-1，则认为到最后一列结束
+            if (colunm_max == -1)//如果列的结束值是-1，则认为到已使用的最后一列结束
             {
-                colunm_max = worksheet.Columns.Count-1;
+                colunm_max = worksheet.UsedRange.Columns.Count-1;
             }
 
             range = (Range)worksheet.Range[worksheet.Cells[row_min+1, colunm_min+1], worksheet.Cells[row_max+1, colunm_max+1]];
@@ -131,7 +131,7 @@ namespace FireExit_FlightSimulation
             {
                 for (int j = 0; j < range.Columns.Count; j++)
                 {
-                    if(range.Value2[i + 1, j + 1] = null)
+                    if(range.Value2[i + 1, j + 1] == null)
                     {
                         data[i, j] = "";
                     }
